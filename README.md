@@ -48,5 +48,3 @@ Transformar la enseñanza de las regiones colombianas en una experiencia atracti
     * 👩‍🎓 Progreso de los usuarios
 
 <br>
-
-**(El resto del README con `<br>` al final de cada sección o donde necesites un salto de línea)**
