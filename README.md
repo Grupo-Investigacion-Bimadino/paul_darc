@@ -1,98 +1,126 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Proyecto DARC: Descubre, Aprende Regiones de Colombia
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Descripción General
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+**DARC (Descubre, Aprende Regiones de Colombia)** es una plataforma web educativa diseñada para transformar el aprendizaje sobre las regiones de Colombia en una experiencia lúdica e interactiva para estudiantes de primaria (7-12 años). A través de juegos didácticos, mapas interactivos y actividades que fomentan el aprendizaje autónomo y la colaboración, DARC busca que los niños aprendan sobre la geografía, cultura, historia y biodiversidad de su país. La plataforma permitirá conectar imágenes, audios y videos, arrastrándolos a diferentes regiones de Colombia, ofreciendo un valioso recurso académico y didáctico también para docentes.
 
-## Description
+Este repositorio (`paul_darc`) contiene el desarrollo y la documentación del proyecto DARC.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tabla de Contenidos
 
-## Project setup
+1.  [Descripción General](#descripción-general)
+2.  [Objetivos del Proyecto](#objetivos-del-proyecto)
+3.  [Características Principales](#características-principales)
+4.  [Público Objetivo](#público-objetivo)
+5.  [Roles de Usuario](#roles-de-usuario)
+6.  [Tecnologías Propuestas](#tecnologías-propuestas)
+7.  [Estructura del Proyecto](#estructura-del-proyecto)
+8.  [Estado del Proyecto](#estado-del-proyecto)
+9.  [Cómo Contribuir](#cómo-contribuir)
+10. [Autores y Equipo](#autores-y-equipo)
+11. [Licencia](#licencia)
 
-```bash
-$ npm install
-```
+## Objetivos del Proyecto
 
-## Compile and run the project
+*   **Educativo:** Facilitar el aprendizaje sobre las regiones de Colombia de forma divertida e interactiva.
+*   **Motivador:** Despertar el interés de los niños por la geografía, cultura e historia de su país.
+*   **Accesible:** Estar disponible para cualquier estudiante con acceso a internet.
+*   **Fácil de usar:** Contar con una interfaz intuitiva y amigable para niños.
+*   **Recurso didáctico:** Proporcionar herramientas y materiales de apoyo para docentes.
 
-```bash
-# development
-$ npm run start
+## Características Principales
 
-# watch mode
-$ npm run start:dev
+*   **Gestión de Perfiles de Usuario:**
+    *   Registro de usuarios.
+    *   Almacenamiento de progreso, puntajes, logros y estadísticas.
+*   **Mapa Interactivo de Colombia:**
+    *   Renderizado del mapa dividido por regiones.
+    *   Funciones de zoom (in/out) y restablecimiento.
+    *   Desplazamiento (panning) en el mapa.
+    *   Resaltado visual de la región seleccionada.
+*   **Información Detallada por Región:**
+    *   Acceso a datos sobre ubicación geográfica, cultura, tradiciones, historia y biodiversidad.
+    *   Visualización de imágenes, reproducción de audios y videos de cada región.
+*   **Juegos Didácticos Interactivos:**
+    *   Juegos con barras de progreso, sistema de puntos y recompensas (logros).
+    *   Actividades interactivas de arrastrar y soltar elementos en el mapa.
+    *   Validación de respuestas y retroalimentación visual y sonora.
+*   **Monitoreo y Reportes (para administradores):**
+    *   Monitoreo del progreso y actividad de los usuarios.
+    *   Generación de reportes y estadísticas sobre el uso de la plataforma.
+    *   Gestión de usuarios, contenido (regiones, información, multimedia) y juegos.
 
-# production mode
-$ npm run start:prod
-```
+## Público Objetivo
 
-## Run tests
+*   Estudiantes de primaria (7-12 años).
+*   Docentes que buscan recursos didácticos complementarios.
 
-```bash
-# unit tests
-$ npm run test
+## Roles de Usuario
 
-# e2e tests
-$ npm run test:e2e
+El sistema contempla los siguientes roles principales:
 
-# test coverage
-$ npm run test:cov
-```
+*   **Alumno:** Puede registrarse, interactuar con el mapa, jugar, ver su progreso y obtener recompensas.
+*   **Docente Investigador / Docente Invitado:** Roles con capacidades específicas para la gestión y uso de la plataforma en un contexto educativo (detalles según documento).
+*   **Administrador:** Gestión completa de usuarios, contenidos, juegos y reportes.
+*   **Invitado (No registrado):** Acceso limitado a ciertas funcionalidades como explorar el mapa y algunos juegos básicos.
 
-## Deployment
+## Tecnologías Propuestas
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+El diseño del proyecto considera el uso de tecnologías modernas para el desarrollo web:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+*   **Frontend:** HTML, CSS, JavaScript (posiblemente con un framework como React, Angular o Vue.js para una SPA).
+*   **Backend:** Un lenguaje de programación para el servidor (Ej: Node.js, Python, Java, PHP) para construir una API RESTful.
+*   **Base de Datos:** Se evaluarán opciones SQL (como PostgreSQL, MySQL) y NoSQL, con un diseño Entidad-Relación ya propuesto.
+*   **Autenticación:** Posiblemente mediante JWT (JSON Web Tokens).
+*   **Otros:** Principios de diseño MVC (Modelo-Vista-Controlador), ORM (Mapeo Objeto-Relacional).
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Estado del Proyecto
 
-## Resources
+Actualmente, el proyecto se encuentra en la **fase de diseño y planificación**, tal como se detalla en el "Documento de Propuesta de Diseño de Software I, II y III". Las siguientes etapas incluirán:
 
-Check out a few resources that may come in handy when working with NestJS:
+1.  **Etapa 2: Persistencia de Datos con Backend:**
+    *   Diseño de la Arquitectura de Backend.
+    *   Elección e implementación de la Base de Datos.
+    *   Desarrollo de la lógica de negocio y Endpoints/APIs.
+    *   Autenticación y Autorización.
+    *   Pruebas del Backend.
+2.  **Etapa 3: Consumo de Datos y Desarrollo Frontend:**
+    *   Creación de la Interfaz de Usuario (UI) con HTML, CSS y JavaScript.
+    *   Desarrollo de la lógica del Frontend y manejo de eventos.
+    *   Consumo de datos desde el Backend (API).
+    *   Implementación de funcionalidades interactivas.
+    *   Pruebas y depuración del Frontend.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Cómo Contribuir
 
-## Support
+Por el momento, el proyecto está en una fase inicial de diseño por el equipo principal. Se actualizará esta sección si se abren oportunidades para contribuciones externas.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Si eres parte del equipo:
 
-## Stay in touch
+1.  Clona el repositorio: `git clone https://github.com/Grupo-Investigacion-Bimadino/paul_darc.git`
+2.  Crea una nueva rama para tus cambios: `git checkout -b feature/nombre-de-tu-funcionalidad`
+3.  Realiza tus cambios y haz commit: `git commit -m "Añade nueva funcionalidad X"`
+4.  Sube tus cambios a la rama: `git push origin feature/nombre-de-tu-funcionalidad`
+5.  Abre un Pull Request para revisión.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Autores y Equipo
 
-## License
+*   **Tutor:** Alexander Enrique Toscano Ricardo
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+*   **Estudiantes:**
+    *   Marlon Yesid Cobos Villalobos
+    *   Nair José Madera Tardecilla
+    *   Felipe Miguel Patrón De La Ossa
+    *   Cristian Javier Castaño Martínez
+
+## Licencia
+
+Este proyecto se distribuye bajo la licencia [NOMBRE DE LA LICENCIA (ej: MIT, GPLv3)]. (Por favor, elige y especifica una licencia).
+Si no tienes una, MIT es una opción popular y permisiva:
+`Este proyecto está licenciado bajo la Licencia MIT - ver el archivo LICENSE.md para más detalles.`
+
+---
+
+*Este README se ha generado basándose en el "Documento de Propuesta de Diseño de Software I, II y III". Se actualizará a medida que el proyecto avance.*
+
