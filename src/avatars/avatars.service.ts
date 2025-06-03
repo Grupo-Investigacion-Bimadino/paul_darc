@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Avatar, AvatarDocument } from './schemas/avatar.schema';
 import { CreateAvatarDto } from './dto/create-avatar.dto';
 import { UpdateAvatarDto } from './dto/update-avatar.dto';
 
 @Injectable()
 export class AvatarsService {
-  create(createAvatarDto: CreateAvatarDto) {
-    return 'This action adds a new avatar';
+  constructor(@InjectModel(Avatar.name) private avatarModel: Model<AvatarDocument>) {}
+
+  async create(createAvatarDto: CreateAvatarDto): Promise<Avatar> {
+    const createdAvatar = new this.avatarModel(createAvatarDto);
+    return createdAvatar.save();
   }
 
-  findAll() {
-    return `This action returns all avatars`;
+  async findAll(): Promise<Avatar[]> {
+    return this.avatarModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} avatar`;
+  async findOne(id: string): Promise<Avatar | null> {
+    return await this.avatarModel.findById(id).exec();
   }
 
-  update(id: number, updateAvatarDto: UpdateAvatarDto) {
-    return `This action updates a #${id} avatar`;
+  async update(id: string, updateAvatarDto: UpdateAvatarDto): Promise<Avatar | null> {
+    return await this.avatarModel.findByIdAndUpdate(id, updateAvatarDto, { new: true }).exec();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} avatar`;
+  async remove(id: string): Promise<any> {
+    return await this.avatarModel.findByIdAndDelete(id).exec();
   }
 }
