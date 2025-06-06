@@ -1,26 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProgressDto } from './dto/create-progress.dto';
 import { UpdateProgressDto } from './dto/update-progress.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Progress, ProgressDocument } from './schemas/progress.schema';
 
 @Injectable()
 export class ProgressService {
-  create(createProgressDto: CreateProgressDto) {
-    return 'This action adds a new progress';
+ constructor(
+    @InjectModel(Progress.name) private progressModel: Model<ProgressDocument>,
+  ) {}
+
+  async create(createProgressDto: CreateProgressDto): Promise<Progress> {
+    const createdProgress = new this.progressModel(createProgressDto);
+ return createdProgress.save();
   }
 
-  findAll() {
-    return `This action returns all progress`;
+  async findAll(): Promise<Progress[]> {
+ return this.progressModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} progress`;
+  async findOne(id: string): Promise<Progress | null> {
+ return this.progressModel.findById(id).exec();
   }
 
-  update(id: number, updateProgressDto: UpdateProgressDto) {
-    return `This action updates a #${id} progress`;
+  async update(id: string, updateProgressDto: UpdateProgressDto): Promise<Progress | null> {
+ return this.progressModel.findByIdAndUpdate(id, updateProgressDto, { new: true }).exec();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} progress`;
+  async remove(id: string): Promise<any> {
+ return this.progressModel.deleteOne({ _id: id }).exec();
   }
 }
