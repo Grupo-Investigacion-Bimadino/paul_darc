@@ -1,33 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose'; // Importar Types
+import { Model } from 'mongoose';
+import { Achievement } from './schemas/achievement.schema';
 import { CreateAchievementDto } from './dto/create-achievement.dto';
 import { UpdateAchievementDto } from './dto/update-achievement.dto';
-import { Achievement, AchievementDocument } from './schemas/achievement.schema';
-import { Avatar } from 'src/avatars/schemas/avatar.schema'; // Importar Avatar si se usa en el servicio
 
 @Injectable()
 export class AchievementsService {
-  constructor(@InjectModel(Achievement.name) private achievementModel: Model<AchievementDocument>) {}
+  constructor(@InjectModel(Achievement.name) private achievementModel: Model<Achievement>) {}
 
-  async create(createAchievementDto: CreateAchievementDto): Promise<Achievement> {
+  create(createAchievementDto: CreateAchievementDto): Promise<Achievement> {
     const createdAchievement = new this.achievementModel(createAchievementDto);
     return createdAchievement.save();
   }
 
-  async findAll(): Promise<Achievement[]> {
-    return this.achievementModel.find().exec();
+  findAll(): Promise<Achievement[]> {
+    return this.achievementModel.find().populate('avatar').exec();
   }
 
-  async findOne(id: string): Promise<Achievement | null> {
-    return await this.achievementModel.findById(id).exec();
+  async findOne(id: string): Promise<Achievement> {
+    const achievement = await this.achievementModel.findById(id).populate('avatar').exec();
+    if (!achievement) {
+      throw new NotFoundException(`Logro con ID ${id} no encontrado`);
+    }
+    return achievement;
   }
 
-  async update(id: string, updateAchievementDto: UpdateAchievementDto): Promise<Achievement | null> {
-    return await this.achievementModel.findByIdAndUpdate(id, updateAchievementDto, { new: true }).exec();
+  async update(id: string, updateAchievementDto: UpdateAchievementDto): Promise<Achievement> {
+    const updatedAchievement = await this.achievementModel.findByIdAndUpdate(id, updateAchievementDto, { new: true });
+    if (!updatedAchievement) {
+      throw new NotFoundException(`Logro con ID ${id} no encontrado`);
+    }
+    return updatedAchievement;
   }
 
-  async remove(id: string): Promise<any> {
-    return await this.achievementModel.findByIdAndDelete(id).exec();
+  async remove(id: string): Promise<{ message: string }> {
+    const result = await this.achievementModel.deleteOne({ _id: id }).exec();
+    if (result.deletedCount === 0) {
+      throw new NotFoundException(`Logro con ID ${id} no encontrado`);
+    }
+    return { message: `Logro con ID ${id} eliminado.` };
   }
 }
