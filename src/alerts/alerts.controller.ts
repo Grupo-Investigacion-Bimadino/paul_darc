@@ -1,3 +1,5 @@
+// src/alerts/alerts.controller.ts
+
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { AlertsService } from './alerts.service';
 import { CreateAlertDto } from './dto/create-alert.dto';
@@ -19,16 +21,19 @@ export class AlertsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.alertsService.findOne(+id);
+    // CORRECTO: 'id' es un string y se pasa directamente.
+    return this.alertsService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAlertDto: UpdateAlertDto) {
-    return this.alertsService.update(+id, updateAlertDto);
+    // CORRECTO: 'id' es un string y se pasa directamente.
+    return this.alertsService.update(id, updateAlertDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.alertsService.remove(+id);
+    // CORRECTO: 'id' es un string y se pasa directamente.
+    return this.alertsService.remove(id);
   }
 }

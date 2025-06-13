@@ -19,16 +19,16 @@ export class AvatarsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.avatarsService.findOne(+id);
+    return this.avatarsService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAvatarDto: UpdateAvatarDto) {
-    return this.avatarsService.update(+id, updateAvatarDto);
+    return this.avatarsService.update(id, updateAvatarDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.avatarsService.remove(+id);
+    return this.avatarsService.remove(id);
   }
 }

@@ -1,16 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
-import { User } from '../../users/schemas/user.schema';
+import { Document, Types, Schema as MongooseSchema } from 'mongoose'; // Importar Schema como MongooseSchema para evitar conflictos de nombre
 import { Achievement } from '../../achievements/schemas/achievement.schema';
-
+import { Users } from 'src/users/schemas/users.schema';
 export type ProgressDocument = Progress & Document;
 
 @Schema({ timestamps: true, collection: 'progresses' })
 export class Progress {
   // _id será generado por Mongoose
 
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  user: User | Types.ObjectId;
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Users', required: true }) // Usar MongooseSchema.Types.ObjectId y referenciar a 'Users'
+  user: Users | Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Achievement', required: true })
   achievement: Achievement | Types.ObjectId;
