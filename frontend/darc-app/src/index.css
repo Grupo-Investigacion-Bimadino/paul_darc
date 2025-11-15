@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-darcGray text-darcText font-poppins;
+  }
+
+  h1, h2, h3 {
+    @apply font-bold text-darcBlue;
+  }
+
+  button {
+    @apply bg-darcGreen text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 transition;
+  }
+}
