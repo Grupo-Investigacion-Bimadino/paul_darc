@@ -1,0 +1,79 @@
+# ===================================================================
+# Dependencias y Artefactos de Build
+# ===================================================================
+# Ignorar en cualquier lugar del proyecto
+node_modules
+.pnp
+.pnp.js
+
+# Carpetas de output/compilación
+/dist
+/build
+/.next/
+/.vite/
+.temp
+.tmp
+
+# ===================================================================
+# Logs y Reportes
+# ===================================================================
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Reportes de cobertura de tests
+/coverage
+/.nyc_output
+
+# ===================================================================
+# Archivos del Sistema Operativo
+# ===================================================================
+.DS_Store
+Thumbs.db
+
+# ===================================================================
+# Archivos de Entorno (¡Nunca subir secretos!)
+# ===================================================================
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+
+# ===================================================================
+# Configuraciones de IDEs y Editores
+# ===================================================================
+# IntelliJ
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+
+# Sublime
+*.sublime-workspace
+
+# VSCode (ignorar todo excepto configuraciones compartidas)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# ===================================================================
+# Otros
+# ===================================================================
+# Archivos de runtime
+pids
+*.pid
+*.seed
+*.pid.lock
