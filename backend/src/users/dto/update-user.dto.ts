@@ -1,4 +1,13 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
+// backend/src/users/dto/update-user.dto.ts
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {}
+import { IsString, IsOptional } from 'class-validator';
+
+export class UpdateUserDto {
+  @IsOptional()
+  @IsString()
+  role?: string; // Solo permitiremos actualizar el rol por ahora
+  
+  @IsOptional()
+  @IsString()
+  displayName?: string; 
+}

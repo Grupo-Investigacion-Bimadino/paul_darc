@@ -1,19 +1,33 @@
-import { IsString, IsNotEmpty, IsUrl, IsOptional } from 'class-validator';
+// backend/src/regions/dto/create-region.dto.ts
+
+import { IsString, IsArray, IsOptional, IsNumber } from 'class-validator';
+
+// Interfaz para el minijuego (debe coincidir con MiniGame del frontend)
+class MiniGameDto {
+  @IsString()
+  id: string;
+
+  @IsString()
+  name: string;
+
+  @IsString()
+  icon: string;
+}
 
 export class CreateRegionDto {
   @IsString()
-  @IsNotEmpty()
-  readonly nombre: string;
+  id: string; // ID DANE
 
-  @IsUrl({}, { message: 'La ruta de la imagen debe ser una URL válida.' })
-  @IsOptional()
-  readonly ruta_imagen?: string;
+  @IsString()
+  name: string;
 
-  @IsUrl({}, { message: 'La ruta del sonido debe ser una URL válida.' })
-  @IsOptional()
-  readonly ruta_sonido?: string;
+  @IsString()
+  description: string;
 
-  @IsUrl({}, { message: 'La ruta del video debe ser una URL válida.' })
+  @IsString()
+  image: string; // Ruta de la imagen
+
   @IsOptional()
-  readonly ruta_video?: string;
+  @IsArray()
+  miniGames: MiniGameDto[];
 }

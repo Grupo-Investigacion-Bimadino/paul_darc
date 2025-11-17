@@ -1,44 +1,64 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { FirebaseService } from '../firebase/firebase.service';
-import { ActivitiesService } from '../activities/activities.service';
-import * as admin from 'firebase-admin';
-import { SubmitAnswerDto } from './dto/submit-answer.dto';
+// backend/src/progress/progress.service.ts
+
+import { Injectable, NotFoundException } from '@nestjs/common';
+import * as admin from 'firebase-admin'; 
+
+// Exportamos la interfaz para que el controlador la pueda usar
+export interface UserProgress {
+  level: number;
+  points: number;
+  unlockedAchievements: string[];
+}
 
 @Injectable()
 export class ProgressService {
-  private firestore: admin.firestore.Firestore;
+  private db = admin.firestore(); 
+  private readonly PROGRESS_COLLECTION = 'progress'; 
 
-  constructor(
-    @Inject(FirebaseService) private firebaseService: FirebaseService,
-    private readonly activitiesService: ActivitiesService,
-  ) {
-    this.firestore = this.firebaseService.getAdmin.firestore();
-  }
-
-  async submitAnswer(userId: string, submitAnswerDto: SubmitAnswerDto): Promise<any> {
-    const { activityId, userAnswer } = submitAnswerDto;
-
-    const activity = await this.activitiesService.findOne(activityId);
-    if (!activity) {
-      throw new NotFoundException(`Actividad con ID ${activityId} no encontrada`);
+  // constructor(private readonly usersService: UsersService) {}
+  
+  async getProgressByUserId(userId: string): Promise<UserProgress | null> {
+    const doc = await this.db.collection(this.PROGRESS_COLLECTION).doc(userId).get();
+    if (!doc.exists) {
+      return null;
     }
-
-    const correctAnswer = activity.correctAnswer;
-
-    const isCorrect = JSON.stringify(userAnswer) === JSON.stringify(correctAnswer);
-    const score = isCorrect ? activity.score || 10 : 0;
-
-    const progress = {
-      userId,
-      activityId,
-      userAnswer,
-      isCorrect,
-      score,
-      submittedAt: new Date(),
+    return doc.data() as UserProgress;
+  }
+  
+  async updateProgress(
+    userId: string,
+    level: number,
+    points: number,
+    achievements: string[],
+  ): Promise<UserProgress> { // <-- Usando interfaz exportada
+    const newProgress: UserProgress = {
+      level,
+      points,
+      unlockedAchievements: achievements,
     };
 
-    const docRef = await this.firestore.collection('progress').add(progress);
+    await this.db.collection(this.PROGRESS_COLLECTION).doc(userId).set(newProgress, { merge: true });
+    
+    console.log(`[DB] Progreso guardado para ${userId}: Nivel ${level}, Puntos ${points}`);
+    
+    return newProgress; 
+  }
 
-    return { id: docRef.id, ...progress };
+  async resetProgress(userId: string): Promise<{ message: string }> {
+    const initialProgress: UserProgress = {
+      level: 1,
+      points: 150,
+      unlockedAchievements: [],
+    };
+
+    await this.db.collection(this.PROGRESS_COLLECTION).doc(userId).set(initialProgress, { merge: true });
+
+    console.log(`[DB] Reseteando progreso para el usuario: ${userId}`);
+    return { message: 'Progreso reseteado exitosamente.' };
+  }
+  
+  async submitAnswer(userId: string, submitAnswerDto: any): Promise<any> {
+    console.log(`[DB] Registrando respuesta para ${userId}:`, submitAnswerDto);
+    return { success: true, registered: submitAnswerDto };
   }
 }

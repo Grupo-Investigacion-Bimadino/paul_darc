@@ -8,12 +8,12 @@ import colombiaData from '../data/colombia.geo.json';
 import { useGame } from '../context/GameContext';
 
 // Componentes UI
-import PlayerInfo from '../components/PlayerInfo';
-import RegionPanel from '../components/RegionPanel';
-import ZoomControls from '../components/ZoomControls';
-import Sidebar from '../components/Sidebar';
-import ProfileModal from '../components/ProfileModal';
-import MiniGameView from '../components/MiniGameView';
+import PlayerInfo from '../components/PlayerInfo'; 
+import RegionPanel from '../components/RegionPanel'; // <-- IMPORTACIÓN CORRECTA
+import ZoomControls from '../components/ZoomControls'; 
+import Sidebar from '../components/Sidebar'; 
+import ProfileModal from '../components/ProfileModal'; 
+import MiniGameView from '../components/MiniGameView'; 
 import SettingsModal from '../components/SettingsModal';
 
 const DarcGame = () => {

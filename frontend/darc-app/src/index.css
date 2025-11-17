@@ -3,31 +3,42 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply bg-darcGray text-darcText font-poppins;
-  }
-
-  h1, h2, h3 {
-    @apply font-bold text-darcBlue;
-  }
-
-  button {
-    @apply bg-darcGreen text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 transition;
-  }
-}
 @layer utilities {
-  @keyframes fade-in-down {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
+    @keyframes slide-in-right {
+        from { opacity: 0; transform: translateX(100%); }
+        to { opacity: 1; transform: translateX(0); }
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+    .animate-slide-in-right {
+        animation: slide-in-right 0.3s ease-out forwards;
     }
+    
+    /* ... (puedes añadir slide-out-right si usas una librería de transiciones) ... */
+}  
+  /* Animación de salida: deslizar hacia la derecha */
+  @keyframes slide-out-right {
+      from {
+          opacity: 1;
+          transform: translateX(0);
+      }
+      to {
+          opacity: 0;
+          transform: translateX(100%);
+      }
   }
-  .animate-fade-in-down {
-    animation: fade-in-down 0.3s ease-out;
+
+  /* Aplicación de clases de animación */
+  .animate-slide-in-right {
+      animation: slide-in-right 0.3s ease-out forwards;
   }
-}
+  .animate-slide-out-right {
+      animation: slide-out-right 0.3s ease-in forwards;
+  }
+  
+  /* Animación de pulso para feedback (ya la tenías en TriviaGame) */
+  @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+  }
+  .animate-pulse {
+      animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }

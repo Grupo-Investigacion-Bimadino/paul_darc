@@ -1,53 +1,56 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { FirebaseService } from '../firebase/firebase.service';
-import * as admin from 'firebase-admin';
+// backend/src/regions/regions.service.ts
+
+import { Injectable, NotFoundException } from '@nestjs/common';
+import * as admin from 'firebase-admin'; 
 import { CreateRegionDto } from './dto/create-region.dto';
 import { UpdateRegionDto } from './dto/update-region.dto';
-import { Region } from './region.interface';
+
+// Importamos la interfaz para la región
+// NOTA: Si usas una interfaz compartida, ajústala aquí. 
+// Por ahora, usamos el tipo Region de tu DTO para tipado interno.
+type Region = CreateRegionDto & { id: string };
 
 @Injectable()
 export class RegionsService {
-  private firestore: admin.firestore.Firestore;
-
-  constructor(
-    @Inject(FirebaseService) private firebaseService: FirebaseService,
-  ) {
-    this.firestore = this.firebaseService.getAdmin.firestore();
-  }
+  private db = admin.firestore();
+  private readonly REGIONS_COLLECTION = 'regions';
 
   async findAll(): Promise<Region[]> {
-    const regionsSnapshot = await this.firestore.collection('regions').get();
-    return regionsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Region));
+    const snapshot = await this.db.collection(this.REGIONS_COLLECTION).get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Region[];
   }
 
-  async findOne(id: string): Promise<Region> {
-    const regionDoc = await this.firestore.collection('regions').doc(id).get();
-    if (!regionDoc.exists) {
-      throw new NotFoundException(`Región con ID ${id} no encontrada`);
-    }
-    return { id: regionDoc.id, ...regionDoc.data() } as Region;
-  }
-
-  async explore(): Promise<any> { // TODO: Return as GeoJSON
-    const regionsSnapshot = await this.firestore.collection('regions').get();
-    const regions = regionsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-    // Convert to GeoJSON FeatureCollection
-    const features = regions.map(region => ({
-        type: 'Feature',
-        properties: {
-            id: region.id,
-            name: region.name,
-            description: region.description,
-        },
-        geometry: region.location, // Assuming 'location' is a GeoJSON geometry object
-    }));
-
-    return {
-        type: 'FeatureCollection',
-        features: features,
+  async create(createRegionDto: CreateRegionDto): Promise<Region> {
+    const newRegion: Region = { 
+      ...createRegionDto,
+      id: createRegionDto.id, // Aseguramos que el ID se usa como clave
     };
+    
+    await this.db.collection(this.REGIONS_COLLECTION).doc(newRegion.id).set(newRegion);
+    console.log(`[DB] Región creada: ${newRegion.name}`);
+    return newRegion;
   }
 
-  // You can implement create, update, and remove for Firestore here if needed
+  // Corrección en la función update: Firestore necesita un objeto simple, no un DTO
+  // Usamos 'any' en el tipo de actualización para satisfacer a Firestore, ya que PatchType es complejo
+  async update(id: string, updateRegionDto: UpdateRegionDto): Promise<Region> {
+    const regionRef = this.db.collection(this.REGIONS_COLLECTION).doc(id);
+    
+    // Firestore solo actualiza los campos proporcionados
+    await regionRef.update(updateRegionDto as any); 
+    
+    const updatedDoc = await regionRef.get();
+    if (!updatedDoc.exists) {
+        throw new NotFoundException(`Región con ID ${id} no encontrada.`);
+    }
+    
+    console.log(`[DB] Región actualizada: ${id}`);
+    return { id: updatedDoc.id, ...updatedDoc.data() } as Region;
+  }
+
+  async remove(id: string): Promise<{ id: string, message: string }> {
+    await this.db.collection(this.REGIONS_COLLECTION).doc(id).delete();
+    console.log(`[DB] Región eliminada: ${id}`);
+    return { id, message: 'Región eliminada exitosamente.' };
+  }
 }

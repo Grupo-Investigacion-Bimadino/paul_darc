@@ -1,4 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+// backend/src/regions/regions.controller.ts
+
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { RegionsService } from './regions.service';
 import { CreateRegionDto } from './dto/create-region.dto';
 import { UpdateRegionDto } from './dto/update-region.dto';
@@ -10,37 +12,39 @@ import { Roles } from '../auth/roles.decorator';
 export class RegionsController {
   constructor(private readonly regionsService: RegionsService) {}
 
-  @Post()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('Administrador')
-  create(@Body() createRegionDto: CreateRegionDto) {
-    // return this.regionsService.create(createRegionDto);
-    return 'This action adds a new region';
-  }
-
+  /**
+   * Endpoint de Lectura (público, usado por GameContext.tsx)
+   * Nota: Este endpoint debe estar abierto (o protegido solo por JwtAuthGuard)
+   * ya que es usado por el frontend para cargar los datos iniciales.
+   */
   @Get()
   findAll() {
     return this.regionsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.regionsService.findOne(id);
+  /**
+   * Endpoints de Administración (Protegidos)
+   * Solo los administradores pueden crear, actualizar o eliminar regiones.
+   */
+
+  @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('Administrador') // Solo Admins pueden crear regiones
+  create(@Body() createRegionDto: CreateRegionDto) {
+    return this.regionsService.create(createRegionDto);
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('Administrador')
+  @Roles('Administrador') // Solo Admins pueden editar regiones
   update(@Param('id') id: string, @Body() updateRegionDto: UpdateRegionDto) {
-    // return this.regionsService.update(id, updateRegionDto);
-    return `This action updates a #${id} region`;
+    return this.regionsService.update(id, updateRegionDto);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('Administrador')
+  @Roles('Administrador') // Solo Admins pueden eliminar regiones
   remove(@Param('id') id: string) {
-    // return this.regionsService.remove(id);
-    return `This action removes a #${id} region`;
+    return this.regionsService.remove(id);
   }
 }

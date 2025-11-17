@@ -1,27 +1,44 @@
 // frontend/darc-app/tsconfig.json
+
 {
-    "compilerOptions": {
-      "target": "es5",
-      "lib": [
-        "dom",
-        "dom.iterable",
-        "esnext"
-      ],
-      "allowJs": true,
-      "skipLibCheck": true,
-      "esModuleInterop": true,
-      "allowSyntheticDefaultImports": true,
-      "strict": true,
-      "forceConsistentCasingInFileNames": true,
-      "noFallthroughCasesInSwitch": true,
-      "module": "esnext",
-      "moduleResolution": "node",
-      "resolveJsonModule": true,
-      "isolatedModules": true,
-      "noEmit": true,
-      "jsx": "react-jsx"
-    },
-    "include": [
-      "src"
-    ]
-  }
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    
+    // --- Configuración de Rutas Absolutas (Aliases) ---
+    "baseUrl": "src", // Indica que la carpeta 'src' es el punto de partida para las rutas
+    "paths": {
+      // Alias para la carpeta components
+      "@components/*": ["components/*"],
+      // Alias para la carpeta pages
+      "@pages/*": ["pages/*"],
+      // Alias para la carpeta context
+      "@context/*": ["context/*"],
+      // Alias para la carpeta data (donde movimos colombia.geo.json)
+      "@data/*": ["data/*"],
+      // Alias directo para axios.ts si no está en una carpeta
+      "@axios": ["axios.ts"] 
+      // Si tu archivo de configuración de firebase está en src/firebase/
+      // también podrías añadir:
+      // "@firebase/*": ["firebase/*"]
+    }
+  },
+  "include": ["src"]
+}
