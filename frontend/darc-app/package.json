@@ -16,6 +16,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.12.0",
     "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.30.1",
     "react-scripts": "5.0.1",
@@ -46,9 +47,13 @@
     ]
   },
   "devDependencies": {
+    "@types/dotenv": "^6.1.1",
     "@types/leaflet": "^1.9.3",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.35",
-    "tailwindcss": "^3.4.18"
+    "stylelint": "^16.25.0",
+    "stylelint-config-standard": "^39.0.1",
+    "tailwindcss": "^3.4.18",
+    "vite": "^7.2.2"
   }
 }

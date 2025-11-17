@@ -1,10 +1,17 @@
+// src/axios.ts
+
 import axios from 'axios';
 
+// La URL base de tu API de NestJS.
+// Si tu backend corre en un puerto diferente, cámbialo aquí.
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000', // Adjust this to your backend's URL
+  baseURL: API_URL,
 });
 
-// This function will be called from the AuthContext to set the token
+// Esta función intercepta cada solicitud para añadir el token de autenticación
+// si existe. Ya la tenías, ¡la mantenemos porque es una excelente práctica!
 export const setAuthHeaderToken = (token: string | null) => {
   if (token) {
     axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -12,13 +19,5 @@ export const setAuthHeaderToken = (token: string | null) => {
     delete axiosInstance.defaults.headers.common['Authorization'];
   }
 };
-
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // Handle errors globally
-    return Promise.reject(error);
-  }
-);
 
 export default axiosInstance;

@@ -1,37 +1,30 @@
-import React from "react";
-import Mapa from "./Mapa.tsx";
+// src/components/ContentArea.tsx
 
+import React from "react";
+
+// La interfaz de props sigue definida por si la necesitas en el futuro,
+// pero el componente ya no la usa activamente.
 interface ContentAreaProps {
   activeSection: string;
 }
 
 const ContentArea: React.FC<ContentAreaProps> = ({ activeSection }) => {
-  switch (activeSection) {
-    case "inicio":
-      return <h2 className="text-2xl font-semibold">Bienvenido a DARC</h2>;
+  // El contenido anterior que renderizaba el mapa ha sido eliminado
+  // para evitar conflictos con la nueva arquitectura del componente DarcGame.
+  // Este componente ahora es un placeholder.
 
-    case "regiones":
-      return (
-        <div>
-          <h2 className="text-2xl font-semibold mb-4">
-            Explora las Regiones de Colombia
-          </h2>
-          <Mapa />
-        </div>
-      );
+  // Si necesitas mostrar contenido diferente basado en la 'activeSection' del sidebar,
+  // la lógica iría aquí.
+  // Por ejemplo:
+  // if (activeSection === 'AlgunaSeccion') {
+  //   return <div>Contenido de Alguna Sección</div>;
+  // }
 
-    case "juegos":
-      return <h2 className="text-2xl font-semibold">Zona de Juegos</h2>;
-
-    case "multimedia":
-      return <h2 className="text-2xl font-semibold">Recursos Multimedia</h2>;
-
-    case "acerca":
-      return <h2 className="text-2xl font-semibold">Acerca del Proyecto</h2>;
-
-    default:
-      return <h2 className="text-2xl font-semibold">Selecciona una sección</h2>;
-  }
+  return (
+    <div className="content-area">
+      {/* Este componente está actualmente vacío para evitar errores de compilación. */}
+    </div>
+  );
 };
 
 export default ContentArea;

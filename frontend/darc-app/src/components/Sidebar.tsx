@@ -1,76 +1,116 @@
-import React, { useState } from "react";
-import { Gamepad2, Map, Settings, ChevronDown } from "lucide-react";
+// src/components/Sidebar.tsx
 
+import React, { useState } from 'react';
+import { useGame } from '../context/GameContext'; // Importamos el hook para acceder a startMiniGame
+import { 
+  FaGamepad, 
+  FaQuestionCircle, 
+  FaMapMarkedAlt, 
+  FaTrophy, 
+  FaCog, 
+  FaChevronDown, 
+  FaChevronUp 
+} from 'react-icons/fa';
+
+// Definimos los tipos para las props que recibimos de App.tsx
 interface SidebarProps {
   activeSection: string;
   setActiveSection: (section: string) => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) => {
-  const [showGamesMenu, setShowGamesMenu] = useState(false);
+  // Estado local para controlar si el submenú de juegos está abierto
+  const [isGamesMenuOpen, setGamesMenuOpen] = useState(true);
+  
+  // Obtenemos la función para iniciar juegos desde nuestro contexto global
+  const { startMiniGame } = useGame();
+
+  // Función para manejar el clic en las secciones principales (que no son juegos)
+  const handleSectionClick = (sectionId: string) => {
+    setActiveSection(sectionId);
+    console.log(`Sección activa: ${sectionId}`);
+  };
+
+  // Lista de juegos para renderizar dinámicamente, ahora con una acción asociada
+  const games = [
+    { 
+      id: 'Trivia', 
+      name: 'Juego 1: Trivia', 
+      icon: <FaQuestionCircle />, 
+      action: () => startMiniGame('Trivia') // Esta acción inicia el juego de trivia
+    },
+    { 
+      id: 'Mapa Interactivo', 
+      name: 'Juego 2: Mapa', 
+      icon: <FaMapMarkedAlt />, 
+      action: () => console.log('Juego "Mapa Interactivo" aún no implementado.')
+    },
+    { 
+      id: 'Desafíos', 
+      name: 'Juego 3: Desafíos', 
+      icon: <FaTrophy />, 
+      action: () => console.log('Juego "Desafíos" aún no implementado.')
+    },
+  ];
 
   return (
-    <aside className="w-64 bg-darcBlue text-white min-h-screen flex flex-col p-5 shadow-xl">
-      <h1 className="text-2xl font-bold mb-8 text-center">DARC Panel</h1>
-
-      {/* Botón Juegos con submenú */}
-      <div>
+    <div className="w-64 h-full bg-gray-800 bg-opacity-80 p-4 rounded-lg shadow-lg text-white flex flex-col">
+      <h2 className="text-xl font-bold mb-6 text-center">DARC</h2>
+      
+      <nav className="flex flex-col space-y-2">
+        {/* Botón Principal de Juegos (Desplegable) */}
         <button
-          onClick={() => setShowGamesMenu(!showGamesMenu)}
-          className={`flex items-center justify-between w-full py-2 px-3 rounded-lg transition ${
-            activeSection === "juegos" ? "bg-darcGreen" : "hover:bg-darcGreen/80"
-          }`}
+          onClick={() => setGamesMenuOpen(!isGamesMenuOpen)}
+          className="w-full flex justify-between items-center p-3 rounded-lg text-left font-bold bg-green-600 hover:bg-green-700 transition"
         >
-          <span className="flex items-center gap-2">
-            <Gamepad2 size={18} />
-            Juegos
-          </span>
-          <ChevronDown
-            className={`transition-transform ${showGamesMenu ? "rotate-180" : ""}`}
-            size={18}
-          />
+          <div className="flex items-center gap-3">
+            <FaGamepad />
+            <span>Juegos</span>
+          </div>
+          {isGamesMenuOpen ? <FaChevronUp /> : <FaChevronDown />}
         </button>
 
-        {showGamesMenu && (
-          <div className="ml-6 mt-2 space-y-1">
-            <button
-              onClick={() => setActiveSection("juego1")}
-              className="block w-full text-left py-1 px-2 rounded hover:bg-darcGreen/60 transition"
-            >
-              Juego 1: Trivia
-            </button>
-            <button
-              onClick={() => setActiveSection("juego2")}
-              className="block w-full text-left py-1 px-2 rounded hover:bg-darcGreen/60 transition"
-            >
-              Juego 2: Mapa Interactivo
-            </button>
-            <button
-              onClick={() => setActiveSection("juego3")}
-              className="block w-full text-left py-1 px-2 rounded hover:bg-darcGreen/60 transition"
-            >
-              Juego 3: Desafíos
-            </button>
+        {/* SUBMENÚ DE JUEGOS */}
+        {isGamesMenuOpen && (
+          <div className="pl-4 flex flex-col space-y-2">
+            {games.map(game => (
+              <button
+                key={game.id}
+                onClick={game.action} // Asignamos la acción correspondiente (iniciar juego)
+                // El estilo condicional ahora solo se basa en si es la sección activa
+                className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition ${
+                  activeSection === game.id
+                    ? 'bg-blue-500 font-bold'
+                    // Ya no necesitamos un onClick separado para setActiveSection aquí
+                    : 'bg-gray-700 hover:bg-gray-600'
+                }`}
+              >
+                {game.icon}
+                <span>{game.name}</span>
+              </button>
+            ))}
           </div>
         )}
-      </div>
 
-      {/* Botón de Opciones */}
-      <button
-        onClick={() => setActiveSection("opciones")}
-        className={`flex items-center gap-2 py-2 px-3 rounded-lg mt-4 transition ${
-          activeSection === "opciones" ? "bg-darcGreen" : "hover:bg-darcGreen/80"
-        }`}
-      >
-        <Settings size={18} />
-        Opciones
-      </button>
+        {/* Botón de Opciones */}
+        <button
+          onClick={() => handleSectionClick('Opciones')}
+          className={`w-full flex items-center gap-3 p-3 rounded-lg text-left font-bold transition ${
+            activeSection === 'Opciones'
+              ? 'bg-blue-500'
+              : 'bg-green-600 hover:bg-green-700'
+          }`}
+        >
+          <FaCog />
+          <span>Opciones</span>
+        </button>
+      </nav>
 
-      {/* Información al pie */}
-      <div className="mt-auto text-center text-xs opacity-70">
-        © 2025 Proyecto DARC
+      {/* Footer */}
+      <div className="mt-auto text-center text-xs text-gray-400">
+        <p>&copy; 2025 Proyecto DARC</p>
       </div>
-    </aside>
+    </div>
   );
 };
 

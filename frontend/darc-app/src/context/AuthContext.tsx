@@ -1,29 +1,36 @@
+// src/context/AuthContext.tsx
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getAuth, onAuthStateChanged, User, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { 
+  getAuth, 
+  onAuthStateChanged, 
+  User, 
+  signInWithEmailAndPassword, 
+  signOut, 
+  signInAnonymously 
+} from 'firebase/auth';
 import { app } from '../firebase/firebase.config';
-import { setAuthHeaderToken } from '../axios' // Import the function to set the token
+import { setAuthHeaderToken } from '../axios';
 
-// Interface for the Auth Context props
 export interface AuthContextType {
   currentUser: User | null;
   token: string | null;
+  isGuest: boolean;
   login: (email: string, password: string) => Promise<any>;
+  loginAsGuest: () => Promise<any>;
   logout: () => Promise<void>;
 }
 
-// Create the context
 export const AuthContext = createContext<AuthContextType | null>(null);
 
-// AuthProvider component props
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-// AuthProvider component
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isGuest, setIsGuest] = useState(false);
   const [loading, setLoading] = useState(true);
   const auth = getAuth(app);
 
@@ -31,23 +38,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
       if (user) {
+        setIsGuest(user.isAnonymous);
         const idToken = await user.getIdToken();
         setToken(idToken);
-        setAuthHeaderToken(idToken); // Set the token for Axios
+        setAuthHeaderToken(idToken);
       } else {
+        setIsGuest(false);
         setToken(null);
-        setAuthHeaderToken(null); // Clear the token for Axios
+        setAuthHeaderToken(null);
       }
       setLoading(false);
     });
-
     return unsubscribe;
   }, [auth]);
 
-  const login = (email, password) => {
+  const login = (email: string, password: string) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
+  const loginAsGuest = () => {
+    return signInAnonymously(auth);
+  };
+
+  // --- CORRECCIÓN ---
+  // La función signOut es la única necesaria para cerrar sesión,
+  // tanto para usuarios registrados como anónimos.
+  // Borrar el usuario anónimo es una acción destructiva que no queremos aquí.
   const logout = () => {
     return signOut(auth);
   };
@@ -55,7 +71,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const value = {
     currentUser,
     token,
+    isGuest,
     login,
+    loginAsGuest,
     logout,
   };
 
@@ -66,7 +84,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-// Custom hook to use the auth context
-export const useAuth = () => {
-  return useContext(AuthContext);
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (context === null) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };

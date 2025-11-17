@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { regionesData } from "../data/regiones.ts";
+import { regionesData } from "../data/regiones";
 
 const Informacion: React.FC = () => {
   const [regionSeleccionada, setRegionSeleccionada] = useState(regionesData[0]);

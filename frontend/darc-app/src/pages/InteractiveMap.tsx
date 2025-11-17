@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import axiosInstance from '../axios.ts';
+import axiosInstance from '../axios';
 
 // 🧩 Interfaz para los datos de la región
 interface Region {

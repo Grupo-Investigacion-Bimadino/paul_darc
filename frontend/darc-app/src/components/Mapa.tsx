@@ -1,64 +1,82 @@
-import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+// src/components/Mapa.tsx
 
-// Solución al bug de los íconos de Leaflet con Webpack
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
-  iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
-});
+import React from 'react';
+import L, { Map, Layer, LeafletMouseEvent } from 'leaflet';
+import { MapContainer, TileLayer, GeoJSON, useMapEvents } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import colombiaData from '../data/colombia.geo.json';
 
-const Mapa: React.FC = () => {
-  const [geoData, setGeoData] = useState<any>(null);
+// Interfaz para la información que pasaremos cuando se seleccione una región.
+// Deberías mover esta interfaz a un archivo de tipos compartido si la usas en otros lugares.
+interface Region {
+  id: string;
+  name: string;
+}
 
-  useEffect(() => {
-    // Cargar el archivo GeoJSON desde la carpeta public
-    fetch("/colombia.geo.json")
-      .then((response) => {
-        if (!response.ok) throw new Error("No se pudo cargar el GeoJSON");
-        return response.json();
-      })
-      .then((data) => setGeoData(data))
-      .catch((err) => console.error("Error al cargar GeoJSON:", err));
-  }, []);
+// 1. Define una interfaz para las props que el componente Mapa aceptará
+interface MapaProps {
+  onRegionSelect: (region: Region | null) => void;
+  selectedRegionName?: string; // Hacemos esta prop opcional con '?'
+}
 
-  const onEachFeature = (feature: any, layer: L.Layer) => {
-    if (feature.properties && feature.properties.NOMBRE_DPT) {
-      layer.bindPopup(feature.properties.NOMBRE_DPT);
-    }
+// 2. Haz que tu componente acepte y desestructure estas props
+const Mapa: React.FC<MapaProps> = ({ onRegionSelect, selectedRegionName }) => {
+  const mapRef = React.useRef<Map | null>(null);
+
+  const resetAllLayers = (map: Map) => {
+    map.eachLayer((layer: any) => {
+      if (layer.feature) {
+        layer.setStyle({ weight: 2, color: 'white', fillOpacity: 0.7 });
+      }
+    });
   };
 
-  const style = (feature: any) => ({
-    fillColor: "#38bdf8", // azul claro
-    weight: 1,
-    opacity: 1,
-    color: "#333",
-    dashArray: "3",
-    fillOpacity: 0.6,
-  });
+  const onEachFeature = (feature: any, layer: Layer) => {
+    const regionName = feature.properties.NOMBRE_DPT;
+    if (!regionName) return;
 
+    layer.on({
+      click: (e: LeafletMouseEvent) => {
+        L.DomEvent.stopPropagation(e);
+        if (mapRef.current) {
+          resetAllLayers(mapRef.current);
+        }
+        
+        // 3. Llama a la función onRegionSelect pasada como prop
+        onRegionSelect({ id: regionName, name: regionName });
+        
+        e.target.setStyle({ weight: 4, color: '#FFD700', fillOpacity: 0.9 });
+      },
+    });
+  };
+
+  const MapEvents = () => {
+    useMapEvents({
+      click() {
+        // 4. Llama a onRegionSelect con 'null' al hacer clic fuera
+        onRegionSelect(null);
+        if (mapRef.current) {
+          resetAllLayers(mapRef.current);
+        }
+      },
+    });
+    return null;
+  };
+
+  const mapStyle = { /* ... tu estilo ... */ };
+  
   return (
-    <div className="w-full h-[80vh] rounded-lg shadow-md">
-      {geoData ? (
-        <MapContainer
-          center={[4.57, -74.29]}
-          zoom={6}
-          style={{ width: "100%", height: "100%", borderRadius: "12px" }}
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          />
-          <GeoJSON data={geoData} onEachFeature={onEachFeature} style={style} />
-        </MapContainer>
-      ) : (
-        <p className="text-center text-gray-600 mt-4">Cargando mapa...</p>
-      )}
-    </div>
+    <MapContainer
+      ref={mapRef}
+      center={[4.5709, -74.2973]}
+      zoom={6}
+      style={{ height: '100%', width: '100%' }}
+      zoomControl={false}
+    >
+      <TileLayer url="https://..."/>
+      <GeoJSON data={colombiaData as any} style={mapStyle} onEachFeature={onEachFeature} />
+      <MapEvents />
+    </MapContainer>
   );
 };
 
